@@ -4,7 +4,7 @@ import time
 def main():
     runtimes = {"T1": 2, "T2": 3, "T3": 5}
     periods = {"T1": 8, "T2": 10, "T3": 15}
-    deadlines_offset = {"T1": 6, "T2": 8, "T3": 10}
+    deadlines_offset = {"T1": 6, "T2": 8, "T3": 11}
 
     remaining = {k: 0 for k in runtimes}
     deadlines = {}
