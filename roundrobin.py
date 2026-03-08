@@ -1,21 +1,19 @@
-import threading
 import time
-
-
-def task(name: str, duration: float):
-    """Simulate a task that runs for `duration` seconds."""
-    print(f"[{name}] starting, will take {duration} seconds")
-    time.sleep(duration)
-    print(f"[{name}] finished")
+import tkinter as tk
 
 
 def main():
-    durations = {"Task1": 10, "Task2": 15} 
+    durations = {"Task1": 10, "Task2": 15}
+    color_codes = {"Task1": "#FF0000", "Task2": "#0000FF", "Task3": "#00FF00"}
     quantum = 2 
     start_time = time.time()
     third_arrival = start_time + 3  
 
-    print("Starting round-robin scheduling (no repetition, slice=2s)")
+    root = tk.Tk()
+    root.title("Round Robin Task Colors")
+    root.geometry("400x400")
+
+    print("Starting round-robin scheduling (quantum=2s)")
     while True:
         if time.time() >= third_arrival and "Task3" not in durations:
             durations["Task3"] = 12
@@ -29,14 +27,19 @@ def main():
             if remaining <= 0:
                 continue
 
-            slice_time = min(quantum, remaining)
-            print(f"[{name}] running for {slice_time}s slice (remaining before: {remaining})")
-            time.sleep(slice_time)
-            durations[name] -= slice_time
-            print(f"[{name}] slice complete (remaining after: {durations[name]})")
+            quantum_time = min(quantum, remaining)
+            print(f"[{name}] running for {quantum_time}s task (remaining before: {remaining})")
+            root.configure(bg=color_codes[name])
+            root.update()
+            time.sleep(quantum_time)
+            root.configure(bg="white")
+            root.update()
+            durations[name] -= quantum_time
+            print(f"[{name}] quantum complete (remaining after: {durations[name]})")
 
 
     print("All tasks completed")
+    root.destroy()
 
 
 if __name__ == "__main__":
