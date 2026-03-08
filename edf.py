@@ -21,35 +21,32 @@ def main():
 
     print("Starting EDF scheduling for 60 seconds\n")
 
-    try:
-        while time.time() < end_time:
-            now = time.time()
+    while time.time() < end_time:
+        now = time.time()
 
-            for task in runtimes:
-                if now >= next_release[task]:
-                    remaining[task] = runtimes[task]
-                    deadlines[task] = next_release[task] + deadlines_offset[task]
-                    next_release[task] += periods[task]
-                    print(f"[{task}] Released (deadline at {deadlines[task] - start_time:.1f}s)")
+        for task in runtimes:
+            if now >= next_release[task]:
+                remaining[task] = runtimes[task]
+                deadlines[task] = next_release[task] + deadlines_offset[task]
+                next_release[task] += periods[task]
+                print(f"[{task}] Released (deadline at {deadlines[task] - start_time:.1f}s)")
 
-            ready_tasks = [t for t in runtimes if remaining[t] > 0]
+        ready_tasks = [t for t in runtimes if remaining[t] > 0]
 
-            if ready_tasks:
-                current = min(ready_tasks, key=lambda t: deadlines[t])
+        if ready_tasks:
+            current = min(ready_tasks, key=lambda t: deadlines[t])
 
-                print(f"[{current}] RUNNING (time {now - start_time:.1f}s)")
-                time.sleep(quantum)
-                remaining[current] -= quantum
+            print(f"[{current}] RUNNING (time {now - start_time:.1f}s)")
+            time.sleep(quantum)
+            remaining[current] -= quantum
 
-                if time.time() > deadlines[current]:
-                    print(f"⚠ DEADLINE MISSED by {current}")
+            if time.time() > deadlines[current]:
+                print(f"⚠ DEADLINE MISSED by {current}")
 
-            else:
-                print("[IDLE]")
-                time.sleep(quantum)
+        else:
+            print("[IDLE]")
+            time.sleep(quantum)
 
-    except KeyboardInterrupt:
-        print("Interrupted by user")
 
     print("\nEDF scheduling finished.")
 
